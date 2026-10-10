@@ -7,4 +7,3 @@
   "editor.formatOnSave": true
 }
 
-// damos las condiciones para que el linter de deno funcione correctamente, ya que por defecto no funciona en monorepos. 
