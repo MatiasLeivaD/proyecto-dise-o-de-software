@@ -18,7 +18,8 @@ export function saveGoogleUser(profile: GoogleProfile): User {
   const user: User = {
     id: existingUser?.id ?? crypto.randomUUID(), // si el usuario ya existe, usamos su id existente; de lo contrario, generamos un nuevo id único utilizando crypto.randomUUID(). Esto nos permite garantizar que cada usuario tenga un identificador único en la base de datos, ya sea que se trate de un usuario nuevo o uno existente.
     createdAt: existingUser?.createdAt ?? new Date().toISOString(),// si el usuario ya existe, usamos su fecha de creación existente; de lo contrario, establecemos la fecha de creación como la fecha y hora actual en formato ISO. Esto nos permite mantener un registro preciso de cuándo se creó cada usuario en la base de datos, ya sea que se trate de un usuario nuevo o uno existente.
-    ...profile,// ...profile es un operador de propagación que copia todas las propiedades del objeto profile (googleId, email, name y picture) en el objeto user. Esto nos permite crear un objeto user completo que contenga toda la información relevante del perfil de Google del usuario, ya sea que se trate de un usuario nuevo o uno existente.
+    ...profile,
+  };// ...profile es un operador de propagación que copia todas las propiedades del objeto profile (googleId, email, name y picture) en el objeto user. Esto nos permite crear un objeto user completo que contenga toda la información relevante del perfil de Google del usuario, ya sea que se trate de un usuario nuevo o uno existente.
   database.prepare(`
     INSERT INTO users (id, google_id, email, name, picture, created_at)
     VALUES (?, ?, ?, ?, ?, ?)
