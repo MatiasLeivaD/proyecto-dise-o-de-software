@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "jose": "npm:jose@6.1.0"
+  },
+  "tasks": {
+    "dev": "deno run --watch --env-file=.env --allow-env --allow-read --allow-write=./data --allow-net src/server.ts",
+    "start": "deno run --env-file=.env --allow-env --allow-read --allow-write=./data --allow-net src/server.ts",
+    "check": "deno check src/server.ts tests/auth_test.ts",
+    "test": "deno test --allow-env --allow-read --allow-write=./data tests/",
+    "lint": "deno lint src tests",
+    "fmt": "deno fmt"
+  }
+} 

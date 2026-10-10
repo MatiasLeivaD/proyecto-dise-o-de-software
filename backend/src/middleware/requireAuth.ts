@@ -1,0 +1,13 @@
+import type { User } from "../models/user.ts"; // volvemos a importar el tipo User desde el archivo user.ts para poder usarlo en la función requireAuth y asegurarnos de que el parámetro user tenga la estructura correcta.
+import { getSessionUser } from "../services/sessionService.ts"; // importamos la función getSessionUser desde el archivo sessionService.ts para poder obtener el usuario asociado a la sesión actual a partir de la solicitud HTTP. Esta función se utiliza dentro de requireAuth para verificar si el usuario está autenticado antes de permitir el acceso a rutas protegidas.
+
+export async function requireAuth(
+  request: Request,
+  handler: (user: User) => Response | Promise<Response>, // definimos la función requireAuth como una función asíncrona que toma dos parámetros: request, que es un objeto de tipo Request que representa la solicitud HTTP entrante, y handler, que es una función que recibe un objeto user de tipo User y devuelve un objeto Response o una promesa que resuelve a un objeto Response. Esta función se utiliza como middleware para proteger rutas que requieren autenticación, asegurándose de que solo los usuarios autenticados puedan acceder a ellas.
+): Promise<Response> {
+  const user = await getSessionUser(request); // hacemos una llamada a la función getSessionUser pasando la solicitud HTTP como argumento. Esta función devuelve el usuario asociado a la sesión actual si existe, o null si no hay un usuario autenticado. Almacenamos el resultado en la variable user para su posterior verificación.
+
+  if (!user) return Response.json({ error: "unauthorized" }, { status: 401 }); // damos una condicion que si no hay un usuario autenticado, devolvemos una respuesta HTTP con un estado 401 (No autorizado) y un cuerpo JSON que indica un error de autorización. Esto asegura que las rutas protegidas solo sean accesibles para usuarios autenticados y proporciona una forma consistente de manejar la autorización en toda la aplicación.
+
+  return handler(user);
+} // requireAuth es una función middleware que se utiliza para proteger rutas que requieren autenticación. Toma una solicitud HTTP y un manejador de ruta como parámetros. Primero, obtiene el usuario asociado a la sesión actual utilizando getSessionUser. Si no hay un usuario autenticado, devuelve una respuesta HTTP con un estado 401 (No autorizado) y un cuerpo JSON que indica un error de autorización. Si el usuario está autenticado, llama al manejador de ruta pasando el objeto user como argumento y devuelve la respuesta generada por el manejador. Esto permite que las rutas protegidas solo sean accesibles para usuarios autenticados y proporciona una forma consistente de manejar la autorización en toda la aplicación.
